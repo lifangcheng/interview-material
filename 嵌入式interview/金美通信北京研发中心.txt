@@ -1,0 +1,46 @@
+void  test(void)
+{
+   char *str = (char *)malloc(100);
+   strcpy(str,"hello");
+   free(str); 
+   if(str != NULL)
+   {
+	strcpy(str,"world");
+	printf(str);
+   }
+}求test的输出结果
+
+int main()
+{
+   int a=6;
+   int b=-20;
+    (a+b>6)?puts(">6"):puts("<=6");
+输出结果：
+
+
+char *getmemory(void)
+{
+   char p[] = "hello world";
+   return p;
+}
+void test(void)
+{
+   char *str= NULL;
+   str = getmemory();
+   printf（str）；	
+}求test函数结果
+
+
+编程实现函数 int my_atoi(char *nptr) 
+
+(1)两台终端A、B进行点对点即时通行 ，只要能够实现互相收发数据，请用伪代码方式网络编程实现。
+
+(2)路由表的作用是什么？普通路由表查找过程，在Linux下如何配置下一条默认路由。
+
+(3)TTL是什么？有什么作用？那些工具用到它？
+
+(4)TCP协议进行拥塞控制的机制有哪些？
+
+(5)网络管理有哪些协议？
+
+

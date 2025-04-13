@@ -1,0 +1,233 @@
+数据库
+
+1、分类： 大型    中型    小型
+		 ORACLE   MYSQL   SQLITE
+
+2、名词：
+		DB	数据库
+		DBMS	数据库管理系统
+		MIS     管理信息系统
+		OA      办公自动化
+3、嵌入式数据库：
+		sqlite3    www.sqlite3.org
+
+	特点：1、开源  C语言开发
+		  2、代码量少 1万行左右，总大小10M以内
+		  3、绿色软件无需安装
+		  4、文件型数据库，可以移动。
+		  5、数据容量最大 2T
+
+
+4、sqlite3的安装：
+	1、在线安装 ：yum install sqlite3
+	2、源码包安装： 
+		tar -zxvf sqlite-autoconf-3081002.tar.gz
+		cd  sqlite-autoconf-3081002
+		./configure
+		make
+		make install
+	3、验证是否安装成功：
+		sqlite3 --version
+		sqlite3 --help
+
+5、sqlite3的使用：
+	0、启动sqlite3 
+			sqlite3 xxx.db  
+			===>用sqlite3 来打开一个名称为test.db的本地数据库。
+
+			出现如下提示符：表明数据库管理系统启动。
+			sqlite> 
+
+	  		退出数据库： 
+	   		.q 命令
+			
+			注意：如果一直出现如下符号：
+			...>   
+			则写';'结束。
+
+	以下所有命令必须在 sqlite> 后执行。
+
+	创建一个数据库：
+		1、touch  xxx.db
+		2、sqlite3 xxx.db
+
+	1、系统维护命令：===> .help
+		出现所有相关的系统维护命令，都是以 "."开头。
+		.database  列出当前系统中的所有数据库
+		.tables    列出当期数据库中的所有表
+		.schema xxx 列出当前指定的xxx表结构
+		.dump  >xxx.sql  ===>导出数据库
+		sqlite3 xxx.db < test.sql ===>导入数据库
+
+
+
+	2、标准SQL语句：===》通用语法在其他平台可以直接使用。
+		注意：所有的sql语句都以';'结尾。
+		创建一个表：
+		create table  表名(表字段1，表字段2，...);
+		eg: create table user(id,name,age);
+		注意：以上表的表字段，支持如下数据类型。int text real blob
+			  默认是text类型。
+
+		create table 表名 （表字段 类型，表字段 类型，。。。。);
+		eg:
+		create table user(id int ,name text,age int);
+
+		删除一个表：
+		drop table  表名；
+		eg：drop table user;
+	   数据库常规操作： 增加 删除 修改 查询
+	   向表中增加数据：
+	   insert into 表名 (字段名称 ) values (值名称);
+	   eg:insert into user (id,name,age) values (1,"zhang",10);
+
+	   insert into user values(3,"wang",11);
+	   insert into user (name) values ( "li");
+
+	   查询表中的数据：
+	   select 列名 from 表名  条件；
+	   eg：select * from user ;
+	       select id from user;
+		 select id,name from user where age = 11;
+
+	   修改表中数据：
+	   update 表名 set 表字段 = 值  满足条件：
+	   eg： update user set id = 1 where name = 'li';
+	   update user set id = 1 where name = "li" and passwd = "123";
+	   update user set id = 2 where name = "li" or  name = "zhao";
+
+	   修改表的字段：
+	   alter table 表名 add  xxx;
+	   alter tables 表明 drop column  xxx; ////sqlite3 不支持
+
+
+	   eg:alter table user add age;
+
+
+	   删除表中数据：
+	   delete from 表名  满足条件：
+	   eg：delete from user ;  ///删除表中所有数据
+	   	   delete from user where id  = 1; ///删除id=1 的数据；
+		   delete from user where id =1 and name = "zhang";
+		   delete from user where id = 1 or id  = 2;
+
+练习：
+	新建一个mydb.db数据库，并在库中新建一个student表
+	至少不能少3个字段，依次录入5条记录删除其中第一条和
+	倒数第二条记录。
+	
+	
+	
+数据库：
+
+维护命令：
+1、数据的导出：
+		sqlite3 xxx.db .dump > xxx.sql
+	//将数据库名称为xxx的数据库整体导出到脚本中。
+
+		sqlite3> .output xxx.sql
+			     .dump xxx ===>xxx是表名
+	//将数据库中某个指定的xxx表导出到脚本中。
+
+
+2、数据的导入：
+		sqlite3 xxx.db < xxx.sql
+
+3、可视化工具安装：sqliteman-1.2.2.tar.gz
+    3.1  tar -zxvf sqliteman-1.2.2.tar.gz
+		
+		 yum install cmake
+		 yum install qt-devel
+
+	3.2  cmake .
+	     cmake -DWANT_INTERNAL_QSCINTILLA=1
+
+	3.3  make
+	3.4  make install
+==================================================
+sqlite3 数据库编程接口：
+
+1、需要的头文件
+		sqlite3.h
+
+2、编译过程
+		-lsqlite3
+
+3、编程框架：
+打开数据库 ==》读写数据库(增，删，改，查) ==》关闭数据库
+
+3.1 打开数据库： sqlite3_open
+    int sqlite3_open(char * path,sqlite3 ** db);
+	功能：打开指定path路径+文件名称的数据库，并将
+		  打开的地址指向db变量的句柄。
+	参数：path 要打开的数据库路径+名称
+		  db  要打开的数据库地址指针
+	返回值：成功  0
+			失败  -1；
+      
+	SQLITE_OK 宏（代表成功）
+
+
+3.2 关闭数据库： sqlite3_close
+	int sqlite3_close(sqlite3 *db);
+	功能：关闭指定的数据库
+	参数：要关闭的数据库地址
+	返回值：成功  0
+			失败  -1；
+
+3.3 数据库操作：
+	查询操作：sqlite3_get_table();  ////select 
+
+	int sqlite3_get_table(sqlite3 *db,char *sql,
+					char *** rest,int *nrow,int *ncol,
+					char ** errmsg);
+
+	功能：在db数据库上执行sql查询语句，并将执行的
+		  结果集返回到rest地址上，同时返回查询的行和列。
+	参数：  db 要执行查询语句的数据库
+	        sql  要执行的select查询语句
+		  rest 查询的结果集是一个三级指针
+		  nrow 查询的结果的行数
+		  ncol 查询的结果的列数
+		  errmsg 如果执行有错误，则存储错误。
+	返回值：成功 0
+			失败 非0；
+
+	执行sql语句：sqlite3_exec();   ////insert delete update
+
+	int sqlite3_exec(sqlite3 *db,char *sql,callback fun,
+					void * arg,char ** errmsg);
+
+	功能：在db数据库上执行sql 非查询语句。
+		  并将结果返回。
+	参数：  db 要执行sql的数据库
+		  sql  要执行的非查询sql语句。
+		  fun  如果该函数要执行查询语句，则该回调函数
+		  	   用来回收查询的结果。
+		  arg  回调函数的参数，如果没有回调函数则该参数为NULL；
+		  errmsg  执行过程中的错误信息。
+	返回值：执行成功  0
+			失败  非0 ；
+
+	int fun(void *arg ,int f_num,char ** f_value,char ** f_name)
+	功能：该函数用于sqlite3_exec执行select语句的
+		  结果集返回数据。
+	参数：arg 由sqlite3_exec传入的参数
+		  f_num 执行该命令所返回测结果集的字段个数。
+		  f_value 查询结果集中的字段的值。
+		  f_name  查询结果集中的字段的名称。
+	返回值：成功 0
+			失败 非0
+	注意：该回调函数必须有返回值，否则可能导致查询异常。
+
+
+练习：  自己创建一个学生表，最少不能低于3个字段
+	  最好有一个唯一主键，
+	  设计程序以代码方式，依次输入5个学生信息
+	  并存储到数据库中，最终查询显示所有学习信息。
+
+	
+
+
+
+

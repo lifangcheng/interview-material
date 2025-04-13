@@ -1,0 +1,173 @@
+1、填空题
+
+1.在进行进栈操作时，应该首先检查占是否（栈满）
+2.p操作使进程（获取资源，获取不到时睡眠），v操作使进程（被唤醒，但只有队列中第一个进程能运行，其余继续列队进入睡眠状态）
+3.多任务操作系统的通讯方式有（信号灯集）（消息队列）（共享内存）进程的调度方式有（抢占式调度）（非抢占式调度）
+
+linux内核的三种调度方法：
+
+1，SCHED_OTHER 分时调度策略，
+2，SCHED_FIFO实时调度策略，先到先服务
+3，SCHED_RR实时调度策略，时间片轮转
+
+文章出处：DIY部落(http://www.diybl.com/course/6_system/linux/Linuxjs/2008625/128286.html)
+
+
+
+4.int a[3][4], (*p)[4];
+  p = a;
+  则*p+1指向（a[0][1]）
+5.以下为Windows NT下的32位C程序：
+  char str[]="Hello";
+  char    *p=str;
+  int      n=10;
+请计算：
+        sizeof(str)=(6)
+        sizeof(p)  =(4)
+        sizeof(n)  =(4)
+void Func(char str[100])
+{
+  请计算sizeof(str)=(100)
+}
+void *p=malloc(100);请计算sizeof(p)=(4)
+
+2、选择题
+
+1.进程死锁的条件不包括()
+A.抢先  B.循环等待  C.互斥  D.动态分配
+2.有5个进程，有一个正在运行状态，则就绪状态最多的进程数量为()
+A.0  B.1  C.4  D.5
+3.正确的运行结果是(D)——看函数功能其实就是求a的b次方等于多少
+#include <iostream.h>
+int fn(int a, int b)
+{
+  if(b>0)
+    return a*fn(a,b-1);
+  else
+    return 1;
+}
+void main()
+{
+  cout<<fn(5,3)<<endl;
+}
+A.60  B.70  C.120  D.125
+}
+
+4.()
+union    
+{    
+  struct    
+ {    
+     unsigned   int   x1:2;    
+     unsigned   int   x2:3;    
+     unsigned   int   x3:3;    
+ }x;    
+char   y;    
+}z;    
+如果令z..y=100则z.x.x3为    
+A.0  B.1  C.3  D.4 
+
+5.执行操作pushi(1),pop(),pop()后,栈顶元素为()
+A.0     B.1     C.2     D.不确定 
+
+3、改程序中的错误    
+  (1)    
+  unsigned   int   sum(unsigned   int   base)    
+  {    
+    static   unsigned   int   sum=0;    
+    unsigned   int   index;    
+    for   (index=1;index<=base;index++)    
+    sum+=index;    
+    return   sum;    
+  } 
+解析：这个程序的功能在于求解1+2+3+......+base，但累加器sum被声明为静态变量，静态变量存储在堆中，不会因为函数被调用完毕栈的释放而丢失，另外最重要的是这个静态局部变量只有在函数被首次调用时才赋初值0，一旦调用1次，其中存储的内容将为该次调用的结果。也就是说，这个函数只有第一次使用才有效。
+
+
+  (2)    
+  unsigned   char   a;    
+  int*b;    
+  *b=100;    
+  a=100;    
+  while(a>=0)    
+  {    
+    a--;    
+  ........    
+  }    
+解析：野指针！*b直接引用，b的指向不明确。
+
+
+  (3)    
+  class   C    
+  {    
+    ...    
+  };    
+  class   B{    
+  pribate:    
+                  *p;    
+  public:    
+              B(){p=new   C[100];}    
+              ~B(){deldte   p;}    
+                      };    
+   
+  B   CreateB()    
+  {    
+    B   b;    
+    return   b;    
+  }    
+解析：
+
+
+
+  12    
+  看程序写结果!    
+  (1)    
+  #include<iostream.h>    
+  class   A    
+  {    
+  public:    
+              A(int   y)    
+                    {    
+                        my=y;    
+                        mx=mx+my;    
+                            }    
+                void   display()    
+                  {    
+                          cout<<"a="<<my<<"b="<<mx<<endl;    
+                        }    
+  private:    
+      static   int   mx;    
+      int   my;    
+  };    
+  int   A::mx=2;    
+  void   main()    
+  {    
+  A   a1(2);    
+    A   a2(4);    
+   
+    a1.display();    
+    a2.display();    
+  }    
+解析：注意static int mx，还有a1，a2为类创建的不同对象。静态变量
+
+
+
+  (2)    
+  chat   *GetMemory(viod)    
+  {    
+    char   p[]="hello   world";    
+    return   p;    
+  }    
+  void   Test(void)    
+  {    
+    char*str=NULL;    
+  str   =   GetMemory();    
+  printf(str);    
+  }    
+解析：输出乱码。因为p[]是一个数组，在函数调用完毕后，空间被释放，仅返回一个指针p，也就是一个地址而已，由于空间被释放，该地址内容不确定。（Linux上实验过了，输出为乱码。
+
+
+最后一道问答题：
+只能记住大概的意思了：
+写方案。一个缓冲区不超过10MB，从一头存入数据，从另一头取出，且取出后标记为未存储。设计算法和数据结构或者一个C类。
+
+要思考的问题：这10MB的空间一次分配会有什么问题？数据结构用链表好还是线性表好？
